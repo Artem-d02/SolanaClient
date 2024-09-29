@@ -14,4 +14,5 @@ target_sources(app PRIVATE "main.cpp")
 target_include_directories(app PRIVATE "${PROJECT_SOURCE_DIR}")
 
 add_subdirectory("method")
+add_subdirectory("client")
 install(TARGETS app)

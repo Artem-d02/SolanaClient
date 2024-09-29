@@ -1,21 +1,23 @@
+#pragma once
+
 #include "get_base.hpp"
 
 namespace NSolana {
 
     class TGetAccountInfo final : public TMethodBase {
     public:
-        TGetAccountInfo() = default;
-        constexpr std::string toString() const override;
+        TGetAccountInfo(const nlohmann::json& params);
+        constexpr std::string name() const override;
     protected:
-        virtual std::optional<std::string> verifyParams(const nlohmann::json& params) override;
+        virtual std::optional<std::string> verifyParams() const override;
     };
 
     class TGetBalance final : public TMethodBase {
     public:
-        TGetBalance() = default;
-        constexpr std::string toString() const override;
+        TGetBalance(const nlohmann::json& params);
+        constexpr std::string name() const override;
     protected:
-        virtual std::optional<std::string> verifyParams(const nlohmann::json& params) override;
+        virtual std::optional<std::string> verifyParams() const override;
     };
 
 }   //  namespace NSolana

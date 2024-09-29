@@ -1,42 +1,51 @@
 #include "get_methods.hpp"
 #include "constants.hpp"
+#include "get_base.hpp"
 #include <format>
 #include <string>
 
 namespace NSolana {
 
-    constexpr std::string TGetAccountInfo::toString() const {
+    TGetAccountInfo::TGetAccountInfo(const nlohmann::json& params)
+        : TMethodBase(params)
+    {}
+
+    constexpr std::string TGetAccountInfo::name() const {
         return "getAccountInfo";
     }
 
-    std::optional<std::string>  TGetAccountInfo::verifyParams(const nlohmann::json& params) {
+    std::optional<std::string>  TGetAccountInfo::verifyParams() const {
         constexpr std::string_view errorTemplate = "[{}]: {} - {}";   //  [method]: common_description - details
-        auto methodName = toString();
+        auto methodName = name();
 
-        if (!params.is_array())
+        if (!params_.is_array())
             return std::make_optional(std::format(errorTemplate, methodName, TConstants::ERROR_TYPE, TConstants::SHOULD_BE_AN_ARRAY));
         
-        if (params.size() == 0)
+        if (params_.size() == 0)
             return std::make_optional(std::format(errorTemplate, methodName, TConstants::ERROR_TYPE, TConstants::SHOULD_BE_NOT_EMPTY_ARRAY));
 
-        if (!params[0].is_string())
+        if (!params_[0].is_string())
             return std::make_optional(std::format(errorTemplate, methodName, TConstants::ERROR_TYPE, TConstants::SHOULD_BE_A_STRING));
 
         return std::nullopt;
     }
 
-    constexpr std::string TGetBalance::toString() const {
+    TGetBalance::TGetBalance(const nlohmann::json& params)
+        : TMethodBase(params)
+    {}
+
+    constexpr std::string TGetBalance::name() const {
         return "getBalance";
     }
 
-    std::optional<std::string>  TGetBalance::verifyParams(const nlohmann::json& params) {
-        auto methodName = toString();
+    std::optional<std::string>  TGetBalance::verifyParams() const {
+        auto methodName = name();
         constexpr std::string_view errorTemplate = "[{}]: {} - {}";   //  [method]: common_description - details
 
-        if (!params.is_array())
+        if (!params_.is_array())
             return std::make_optional(std::format(errorTemplate, methodName, TConstants::ERROR_TYPE, TConstants::SHOULD_BE_AN_ARRAY));
         
-        if (params.size() == 0)
+        if (params_.size() == 0)
             return std::make_optional(std::format(errorTemplate, methodName, TConstants::ERROR_TYPE, TConstants::SHOULD_BE_NOT_EMPTY_ARRAY));
 
         return std::nullopt;
