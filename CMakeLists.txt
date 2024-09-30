@@ -15,4 +15,5 @@ target_include_directories(app PRIVATE "${PROJECT_SOURCE_DIR}")
 
 add_subdirectory("method")
 add_subdirectory("client")
+add_subdirectory("events")
 install(TARGETS app)

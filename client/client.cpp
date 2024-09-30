@@ -119,7 +119,7 @@ namespace NSolana {
         req.body() = body;
         req.prepare_payload();
 
-        context_.restart();
+        context_.restart(); //  TODO
 
         auto createTimeOutHandler = [&](const std::string& timeOutMsg) {
             return [=, this](const boost::system::error_code& e) {
