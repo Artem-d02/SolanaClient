@@ -1,4 +1,5 @@
 #include "../client/client.hpp"
+#include "scheduler.hpp"
 #include <thread>
 
 namespace NSolana {
@@ -12,10 +13,10 @@ namespace NSolana {
     class TEventHandler final {
     private:
         THttpClient client_;
-        std::vector<std::thread> threads_;
+        TSimpleScheduler<std::function<void()>> scheduler_;
     public:
-        TEventHandler(const std::string& host, const std::string& port);
-        void handleEvent(EEventType event, TMethodBase* method);
+        TEventHandler(const std::string& host, const std::string& port, size_t msRequestsInterval);
+        void handleEvent(EEventType event, const TMethodBase& method);
         void join();
     };
 

@@ -10,4 +10,5 @@ target_link_libraries(app ${Boost_LIBRARIES})
 target_sources(app PRIVATE
     ${CUR_DIR}/event_handler.hpp
     ${CUR_DIR}/event_handler.cpp
+    ${CUR_DIR}/scheduler.hpp
 )
