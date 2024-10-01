@@ -1,6 +1,8 @@
 #include <random>
+#include <iostream>
 
 #include "events/event_handler.hpp"
+#include "method/get_methods.hpp"
 
 using namespace boost::asio;
 using namespace boost::beast;
@@ -55,7 +57,7 @@ void testClient(const std::string& host, const std::string& port) {
     measureTime(mainAsyncCode, 1);
 }
 
-void testEventHandler(const std::string& host, const std::string& port) {
+void testEventHandler(const std::string& host, const std::string& port, size_t solanaDelayMs, size_t statsWindowSizeMs, size_t requestsCount) {
     NSolana::TEventHandler handler;
 
     auto params = NSolana::TGetAccountInfo(nlohmann::json::array({
@@ -65,7 +67,7 @@ void testEventHandler(const std::string& host, const std::string& port) {
             }
     }));
 
-    auto invokeFunctor = std::make_shared<NSolana::TInvokeHandlerFunctor>(host, port, 100, 50);
+    auto invokeFunctor = std::make_shared<NSolana::TInvokeHandlerFunctor>(host, port, solanaDelayMs, statsWindowSizeMs);
     auto nothingFunctor = std::make_shared<NSolana::TNothingHandlerFunctor>();
     auto errorFunctor = std::make_shared<NSolana::TErrorHandlerFunctor>("Displaying error message");
 
@@ -85,7 +87,7 @@ void testEventHandler(const std::string& host, const std::string& port) {
     };
 
 
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < requestsCount; ++i) {
         handler.handleEvent(types[distrib(gen)], params);
     }
 
@@ -135,6 +137,6 @@ int main() {
     const std::string host = "api.devnet.solana.com";
     const std::string port = "80";
 
-    testEventHandler(host, port);
+    testEventHandler(host, port, 100, 50, 1000);
 
 }
