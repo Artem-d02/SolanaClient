@@ -19,8 +19,8 @@ namespace NSolana {
         }
     }
 
-    TInvokeHandlerFunctor::TInvokeHandlerFunctor(const std::string& host, const std::string& port, size_t msRequestsInterval)
-        : client_(host, port), scheduler_(msRequestsInterval)
+    TInvokeHandlerFunctor::TInvokeHandlerFunctor(const std::string& host, const std::string& port, size_t msRequestsInterval, size_t msStatsInterval)
+        : client_(host, port), scheduler_(msRequestsInterval), stats_(msStatsInterval)
     {
         auto err = client_.connect();
         if (err)
@@ -59,7 +59,7 @@ namespace NSolana {
             {
                 std::lock_guard<std::mutex> lg(responsesMutex_);
                 if (!responses_.contains(slotVal)) {
-                    std::cout << "Getting slot = " << slotVal << " with latency = " << latency.count() << std::endl;
+                    std::cout << "Getting slot = " << slotVal << " with latency = " << latency.count() << " ms and normal deviation for last " << stats_.getWindowSize() << " ms = " << stats_.getNormalDeviationWithNewElement(std::make_pair(slotVal, latency.count())) << std::endl;
                     responses_.emplace(slotVal, std::make_pair(response, latency));
                 }
             }

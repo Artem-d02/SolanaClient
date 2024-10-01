@@ -15,12 +15,13 @@ namespace NSolana {
 
     class THttpClient final {
     private:
+        static const size_t BUFFER_SIZE = 4096; 
         const std::string host_;
         boost::asio::io_context context_;
         boost::asio::ip::tcp::socket socket_;
         boost::asio::deadline_timer timer_;
         boost::asio::ip::tcp::endpoint ep_;
-        boost::beast::flat_buffer buffer_{8192};
+        boost::beast::flat_buffer buffer_{BUFFER_SIZE};
         boost::beast::http::message<false, boost::beast::http::string_body> msg_;
         bool isConnected_{ false };
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../client/client.hpp"
+#include "../stats/stats.hpp"
 #include "scheduler.hpp"
 #include <thread>
 #include <mutex>
@@ -31,8 +32,9 @@ namespace NSolana {
         TSimpleScheduler<std::function<void()>> scheduler_;
         std::map<size_t, std::pair<boost::beast::http::response<boost::beast::http::string_body>, std::chrono::milliseconds>> responses_;
         std::mutex responsesMutex_;
+        TStats<size_t> stats_;
     public:
-        TInvokeHandlerFunctor(const std::string& host, const std::string& port, size_t msRequestsInterval);
+        TInvokeHandlerFunctor(const std::string& host, const std::string& port, size_t msRequestsInterval, size_t msStatsInterval);
         void call(const TMethodBase& method) override;
         void join() override;
         const std::map<size_t, std::pair<boost::beast::http::response<boost::beast::http::string_body>, std::chrono::milliseconds>>& getResponses() const noexcept;

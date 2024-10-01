@@ -15,6 +15,7 @@
 #include <iostream>
 #include <nlohmann/json_fwd.hpp>
 #include "events/scheduler.hpp"
+#include "stats/stats.hpp"
 
 using namespace boost::asio;
 using namespace boost::beast;
@@ -79,7 +80,7 @@ void testEventHandler(const std::string& host, const std::string& port) {
             }
     }));
 
-    auto invokeFunctor = std::make_shared<NSolana::TInvokeHandlerFunctor>(host, port, 100);
+    auto invokeFunctor = std::make_shared<NSolana::TInvokeHandlerFunctor>(host, port, 100, 50);
     auto nothingFunctor = std::make_shared<NSolana::TNothingHandlerFunctor>();
     auto errorFunctor = std::make_shared<NSolana::TErrorHandlerFunctor>("Displaying error message");
 
@@ -99,7 +100,7 @@ void testEventHandler(const std::string& host, const std::string& port) {
     };
 
 
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 1000; ++i) {
         handler.handleEvent(types[distrib(gen)], params);
     }
 
@@ -125,6 +126,24 @@ void testSimpleScheduler() {
     sch.joinAllEvents();
 
     std::cout << std::boolalpha << sch.addEvent(print) << std::endl;
+}
+
+void testStats() {
+    NSolana::TStats<size_t> stats(5);
+
+    std::vector<std::pair<size_t, double>> range = {
+        { 0, 0 },
+        { 1, 1 },
+        { 2, 2 },
+        { 3, 3 },
+        { 4, 4 },
+        { 5, 5 }
+    };
+
+    std::cout << "Standard deviation" << std::endl;
+    for (const auto& elem : range) {
+        std::cout << stats.getNormalDeviationWithNewElement(elem) << std::endl;
+    }
 }
 
 int main() {
