@@ -1,21 +1,6 @@
-#include "client/client.hpp"
-#include "method/get_methods.hpp"
-#include <boost/beast/http/basic_parser.hpp>
-#include <boost/beast/http/parser.hpp>
-#include <boost/asio.hpp>
-#include <boost/beast/core.hpp>
-#include <boost/beast/http.hpp>
-#include <boost/beast/http/string_body.hpp>
-#include <boost/beast/version.hpp>
 #include <random>
 
 #include "events/event_handler.hpp"
-
-//  Temporary
-#include <iostream>
-#include <nlohmann/json_fwd.hpp>
-#include "events/scheduler.hpp"
-#include "stats/stats.hpp"
 
 using namespace boost::asio;
 using namespace boost::beast;
