@@ -7,6 +7,7 @@
 #include <boost/beast/http.hpp>
 #include <boost/beast/http/string_body.hpp>
 #include <boost/beast/version.hpp>
+#include <random>
 
 #include "events/event_handler.hpp"
 
@@ -78,11 +79,28 @@ void testEventHandler(const std::string& host, const std::string& port) {
             }
     }));
 
-    handler.registerHandlerFunctor(NSolana::EEventType::INVOKE, std::make_unique<NSolana::TInvokeHandlerFunctor>(host, port, 100));
+    auto invokeFunctor = std::make_shared<NSolana::TInvokeHandlerFunctor>(host, port, 100);
+    auto nothingFunctor = std::make_shared<NSolana::TNothingHandlerFunctor>();
+    auto errorFunctor = std::make_shared<NSolana::TErrorHandlerFunctor>("Displaying error message");
 
-    //  TODO: fix ratelimit exceed error
+
+    handler.registerHandlerFunctor(NSolana::EEventType::INVOKE, invokeFunctor);
+    handler.registerHandlerFunctor(NSolana::EEventType::NOTHING, nothingFunctor);
+    handler.registerHandlerFunctor(NSolana::EEventType::ERROR, errorFunctor);
+
+    std::random_device rd;  
+    std::mt19937 gen(rd()); 
+    std::uniform_int_distribution<> distrib(0, 2);
+
+    std::vector<NSolana::EEventType> types = {
+        NSolana::EEventType::INVOKE,
+        NSolana::EEventType::ERROR,
+        NSolana::EEventType::NOTHING
+    };
+
+
     for (int i = 0; i < 10; ++i) {
-        handler.handleEvent(NSolana::EEventType::INVOKE, params);
+        handler.handleEvent(types[distrib(gen)], params);
     }
 
     handler.join();
