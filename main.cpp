@@ -69,7 +69,7 @@ void testClient(const std::string& host, const std::string& port) {
 }
 
 void testEventHandler(const std::string& host, const std::string& port) {
-    NSolana::TEventHandler handler(host, port, 100);
+    NSolana::TEventHandler handler;
 
     auto params = NSolana::TGetAccountInfo(nlohmann::json::array({
             "vines1vzrYbzLMRdu58ou5XTby4qAqVRLmqo36NKPTg",
@@ -77,6 +77,8 @@ void testEventHandler(const std::string& host, const std::string& port) {
                 {"encoding", "base58"}
             }
     }));
+
+    handler.registerHandlerFunctor(NSolana::EEventType::INVOKE, std::make_unique<NSolana::TInvokeHandlerFunctor>(host, port, 100));
 
     //  TODO: fix ratelimit exceed error
     for (int i = 0; i < 10; ++i) {
